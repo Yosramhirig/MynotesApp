@@ -1,8 +1,10 @@
 package com.example.mynotesapp.feature_note.presentation.notes_screen
 
 import android.annotation.SuppressLint
+import android.util.Log
 import android.widget.Space
 import androidx.compose.animation.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.rememberScrollableState
 import androidx.compose.foundation.layout.*
@@ -14,13 +16,17 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.idkkkk.R
 import com.example.mynotesapp.feature_note.domain.model.Note
 import com.example.mynotesapp.feature_note.presentation.destinations.AddEditNoteScreenDestination
 import com.example.mynotesapp.feature_note.presentation.notes_screen.components.NoteItem
@@ -28,8 +34,10 @@ import com.plcoding.cleanarchitecturenoteapp.feature_note.presentation.notes.com
 
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.delay
 
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 @Destination(start = true)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -39,6 +47,7 @@ fun NotesScreen(
     viewModel : NotesViewModel = hiltViewModel()
 ) {
     val state = viewModel.state.value
+    val statsize = state.notes.size
     val scaffoldState = rememberScaffoldState()
     val scope =  rememberCoroutineScope()
     
@@ -86,30 +95,51 @@ fun NotesScreen(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(modifier = Modifier.fillMaxSize()){
-                items(state.notes){note ->
-                NoteItem(note = note,
-                modifier = Modifier.fillMaxWidth()
-                    .clickable {
-                       nav.navigate(AddEditNoteScreenDestination(noteColor = note.color, noteId = note.id!!))
+            if(statsize > 0) {
+                LazyColumn(modifier = Modifier.fillMaxSize()){
+                    items(state.notes){note ->
+                        NoteItem(note = note,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    nav.navigate(
+                                        AddEditNoteScreenDestination(
+                                            noteColor = note.color,
+                                            noteId = note.id!!
+                                        )
+                                    )
 
-                    }
-                ) {
-                    viewModel.onEvent(NotesEvent.DeleteNote(note))
-                    scope.launch {
-                        val result = scaffoldState.snackbarHostState.showSnackbar(
-                            message = "Note deleted",
-                            actionLabel = "Undo"
-                        )
-                        if (result == SnackbarResult.ActionPerformed) {
-                            viewModel.onEvent(NotesEvent.RestoreNote)
+                                }
+                        ) {
+                            viewModel.onEvent(NotesEvent.DeleteNote(note))
+                            scope.launch {
+                                val result = scaffoldState.snackbarHostState.showSnackbar(
+                                    message = "Note deleted",
+                                    actionLabel = "Undo"
+                                )
+                                if (result == SnackbarResult.ActionPerformed) {
+                                    viewModel.onEvent(NotesEvent.RestoreNote)
+                                }
+                            }
                         }
-                    }
-                }
-                    Spacer(modifier = Modifier.height(16.dp))
+                        Spacer(modifier = Modifier.height(16.dp))
 
+                    }
                 }
             }
+            else{
+                    Image(
+                        modifier = Modifier.fillMaxWidth()
+                            .height(400.dp) .padding(top = 100.dp) ,
+                        painter = painterResource(id = R.drawable.empty),
+                        contentDescription = "empty",
+                        contentScale = ContentScale.Fit,
+
+                        )
+
+
+            }
+            
 
         }
         

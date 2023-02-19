@@ -10,5 +10,4 @@ class GetNote(
     suspend fun getNote(id: Int): Note? {
         return repository.getNoteById(id)
     }
-
     }
