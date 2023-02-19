@@ -44,9 +44,7 @@ fun NotesScreen(
     
     Scaffold (
         floatingActionButton = {
-            FloatingActionButton(onClick = {nav.navigate(AddEditNoteScreenDestination(
-                -1
-            ))},
+            FloatingActionButton(onClick = { nav.navigate(AddEditNoteScreenDestination( -1 , ))},
             backgroundColor = MaterialTheme.colors.primary
             ) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add note" )
@@ -93,7 +91,7 @@ fun NotesScreen(
                 NoteItem(note = note,
                 modifier = Modifier.fillMaxWidth()
                     .clickable {
-                        nav.navigate(AddEditNoteScreenDestination(noteColor = note.color, noteId = note.id!!))
+                       nav.navigate(AddEditNoteScreenDestination(noteColor = note.color, noteId = note.id!!))
 
                     }
                 ) {

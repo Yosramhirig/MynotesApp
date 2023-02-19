@@ -1,4 +1,4 @@
-package com.example.mynotesapp.feature_note.presentation.util
+package com.example.mynotesapp.feature_note.presentation.notes_screen.util
 
 data class NoteTextFieldState (
     val text: String = "",

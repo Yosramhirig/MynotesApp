@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mynotesapp.ui.theme.MyNotesAppTheme
 import com.ramcosta.composedestinations.DestinationsNavHost
+import com.ramcosta.composedestinations.annotation.NavGraph
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
